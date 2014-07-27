@@ -1,4 +1,4 @@
-dotfiles
+Cristián Romo's dotfiles
 ========
 
-Configuration and setup files for various command line utilities
+Configuration and setup files for various command line utilities.
