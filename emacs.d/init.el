@@ -107,17 +107,28 @@
   (setq tramp-default-method "plink"))
 
 ; Load package manager
-(when (load (expand-file-name "~/.emacs.d/package.el")))
-(require 'package)
-(add-to-list 'package-archives '("elpa" . "http://elpa.gnu.org/packages/"))
-(add-to-list 'package-archives
-             '("marmalade" . "http://marmalade-repo.org/packages/"))
-(package-initialize)
+(when (<= 24 emacs-major-version)
+  (require 'package)
+  (add-to-list 'package-archives '("elpa" . "http://elpa.gnu.org/packages/") t)
+  (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
+  (package-initialize))
+(setq package-list '(evil key-chord))
+(or (file-exists-p package-user-dir)
+    (package-refresh-contents))
+(dolist (package package-list)
+  (unless (package-installed-p package)
+    (package-install package)))
+;; (when (load (expand-file-name "~/.emacs.d/package.el")))
+;; (require 'package)
+;; (add-to-list 'package-archives '("elpa" . "http://elpa.gnu.org/packages/"))
+;; (add-to-list 'package-archives
+;;              '("marmalade" . "http://marmalade-repo.org/packages/"))
+;; (package-initialize)
 
 (require 'evil)
 (evil-mode 1)
 
-(when (load (expand-file-name "~/.emacs.d/key-chord.el")))
+;; (when (load (expand-file-name "~/.emacs.d/key-chord.el")))
 (require 'key-chord)
 (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
 (key-chord-mode 1)
