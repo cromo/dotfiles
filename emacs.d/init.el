@@ -89,13 +89,15 @@
 
 ;; Disable the menu bar, since I can't click them in a terminal anyway.
 (menu-bar-mode -1)
-
-;; Turn on the ruler
-(ruler-mode)
+(tool-bar-mode -1)
+(toggle-scroll-bar -1)
+(set-face-attribute 'default nil :height 75)
+(setq initial-frame-alist
+      '((width . 80)
+	(height . 81)))
 
 ;; Turn on the column display in the mode line.
 (column-number-mode)
-
 
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
@@ -109,10 +111,15 @@
 ; Load package manager
 (when (<= 24 emacs-major-version)
   (require 'package)
+  (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
   (add-to-list 'package-archives '("elpa" . "http://elpa.gnu.org/packages/") t)
   (add-to-list 'package-archives '("marmalade" . "http://marmalade-repo.org/packages/") t)
   (package-initialize))
-(setq package-list '(evil key-chord))
+(setq package-list
+      '(evil
+	key-chord
+	lua-mode
+	monokai-theme))
 (or (file-exists-p package-user-dir)
     (package-refresh-contents))
 (dolist (package package-list)
@@ -132,3 +139,7 @@
 (require 'key-chord)
 (key-chord-define evil-insert-state-map "jj" 'evil-normal-state)
 (key-chord-mode 1)
+
+(setq lua-indent-level 2)
+
+(load-theme 'monokai t)
