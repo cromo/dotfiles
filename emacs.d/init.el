@@ -94,13 +94,14 @@
 (set-face-attribute 'default nil :height 75)
 (setq initial-frame-alist
       '((width . 80)
-	(height . 81)))
+	(height . 67)))
 
 ;; Turn on the column display in the mode line.
 (column-number-mode)
 
 (setq ido-enable-flex-matching t)
 (setq ido-everywhere t)
+(setq ido-auto-merge-work-directories-length -1)
 (ido-mode 1)
 (put 'dired-find-alternate-file 'disabled nil)
 
