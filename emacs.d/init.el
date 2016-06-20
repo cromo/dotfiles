@@ -119,6 +119,7 @@
 (setq package-list
       '(evil
 	key-chord
+	scad-mode
 	lua-mode
 	monokai-theme))
 (or (file-exists-p package-user-dir)
