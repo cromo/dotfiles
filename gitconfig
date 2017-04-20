@@ -1,0 +1,7 @@
+[user]
+	email = cristian.g.romo@gmail.com
+	name = Cristian Romo
+[color]
+	ui = true
+[diff]
+	algorithm = patience
