@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+IFS=$'\n\t'
+
+main() {
+    need_cmd git
+    need_cmd rcup
+
+    clone_dotfiles_repo
+    link_dotfiles
+}
+
+clone_dotfiles_repo() {
+    if [[ ! -d ~/.dotfiles ]]; then
+        git clone https://github.com/cromo/dotfiles ~/.dotfiles
+    fi
+}
+
+link_dotfiles() {
+    # Bring in rcrc first to control further rcm commands. This prevents rcup
+    # from linking things that should be excluded, like `README.md`.
+    rcup -v rcrc
+    rcup -v
+}
+
+say() {
+    printf "%s\n" "$1"
+}
+
+err() {
+    say "$1" >&2
+    exit 1
+}
+
+has_cmd() {
+    command -v "$1" > /dev/null 2>&1
+}
+
+need_cmd() {
+    if ! has_cmd "$1"; then
+        err "need '$1' (command not found)"
+    fi
+}
+
+main "$@"
