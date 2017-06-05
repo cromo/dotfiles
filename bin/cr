@@ -52,6 +52,7 @@ install() {
             \curl -L https://install.perlbrew.pl | bash
             ;;
         rebol2)
+            need_cmd curl
             local rebol_version="278-4-10"
             \curl -LO "http://www.rebol.com/downloads/v278/rebol-core-$rebol_version.tar.gz"
             tar xf "rebol-core-$rebol_version.tar.gz"
@@ -59,6 +60,10 @@ install() {
             mv rebol-core "$install_path"
             (cd "$install_path" &&
               ln --symbolic --force rebol-core/rebol rebol2)
+            ;;
+        spacemacs)
+            need_cmd git
+            git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d
             ;;
         *)
             err "unknown package requested: $package"
