@@ -1,0 +1,88 @@
+#!/usr/bin/env bash
+
+set -euo pipefail
+IFS=$'\n\t'
+
+install_path="$HOME/.local/bin"
+
+main() {
+    if [[ $# -eq 0 ]]; then
+        cr_help
+        exit 0
+    fi
+
+    local subcommand="$1"; shift
+    case "$subcommand" in
+        help)
+            cr_help
+            ;;
+        install)
+            install "$@"
+            ;;
+        path)
+            say "$install_path"
+            ;;
+        *)
+            >&2 printf "unknown subcommand: %s\n" "$subcommand"
+            >&2 cr_help
+            exit 1
+            ;;
+    esac
+    exit 0
+}
+
+cr_help() {
+    cat <<EOF
+  cr path  # Show the path where cr is installing scripts and binaries when possible
+EOF
+}
+
+install() {
+    if [[ $# -eq 0 ]]; then
+        err "nothing specified for installation"
+    fi
+
+    mkdir -p "$install_path"
+
+    local package="$1"; shift
+    case "$package" in
+        perlbrew)
+            need_cmd curl
+            export PERLBREW_ROOT="$install_path/perl5/perlbrew"
+            \curl -L https://install.perlbrew.pl | bash
+            ;;
+        rebol2)
+            local rebol_version="278-4-10"
+            \curl -LO "http://www.rebol.com/downloads/v278/rebol-core-$rebol_version.tar.gz"
+            tar xf "rebol-core-$rebol_version.tar.gz"
+            rm "rebol-core-$rebol_version.tar.gz"
+            mv rebol-core "$install_path"
+            (cd "$install_path" &&
+              ln --symbolic --force rebol-core/rebol rebol2)
+            ;;
+        *)
+            err "unknown package requested: $package"
+            ;;
+    esac
+}
+
+say() {
+    printf "%s\n" "$1"
+}
+
+err() {
+    say "$1" >&2
+    exit 1
+}
+
+has_cmd() {
+    command -v "$1" > /dev/null 2>&1
+}
+
+need_cmd() {
+    if ! has_cmd "$1"; then
+        err "need '$1' (command not found)"
+    fi
+}
+
+main "$@"
